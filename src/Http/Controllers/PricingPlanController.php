@@ -18,9 +18,14 @@ final class PricingPlanController extends Controller
     {
         Gate::authorize('viewAny', PricingPlan::class);
         $teamId = data_get($request->user(), 'current_team_id') ?? data_get($request->user(), 'currentTeam.id');
-        $plans = $query->execute($teamId === null ? null : (int) $teamId, $request->integer('per_page', 25));
+        $plans = $query->execute($teamId === null ? null : (int) $teamId, $this->pageSize($request));
 
         return response()->json(['data' => $plans->getCollection()->map(fn (PricingPlan $plan): array => $this->resource($plan))->values(), 'meta' => ['current_page' => $plans->currentPage(), 'last_page' => $plans->lastPage()]]);
+    }
+
+    private function pageSize(Request $request): int
+    {
+        return min(max((int) $request->input('page.size', $request->integer('per_page', 25)), 1), 100);
     }
 
     public function store(Request $request, CreatePricingPlan $create): JsonResponse

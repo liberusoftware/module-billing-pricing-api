@@ -1,3 +1,3 @@
 # Liberu Billing Pricing API
 
-Sanctum-protected API adapter for `liberusoftware/billing-pricing`.
+Sanctum-protected API adapter for `liberusoftware/module-billing-pricing`.
